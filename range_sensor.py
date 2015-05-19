@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
 import time
+import signal
+import sys
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
@@ -58,9 +60,16 @@ def run_sensor(sensor):
         GPIO.output(LED_PIN[sensor], False)
     time.sleep(0.05)
 
+# Cleaning up and exiting the program
+def signal_handler(signal, frame):
+    GPIO.cleanup()
+    print "\nCleaned up, now quiting"
+    sys.exit(0)
+
 # Makes sure that the program sets up the pins and
 # keeps checking the sensors
 def main():
+    signal.signal(signal.SIGINT, signal_handler)
     print "Starting Checking For Bikes"
     pin_setup()
     while True:
@@ -68,4 +77,3 @@ def main():
             run_sensor(X)
 
 main()
-GPIO.cleanup()
