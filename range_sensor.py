@@ -7,7 +7,7 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BCM)
 
 TRIG = 2              # The pin that gets triggered from the echo
-DIST_TRIGGER = 30     # The length in centimeters that the led should light up
+DIST_TRIGGER = 60     # The length in centimeters that the led should light up
 ECHO_PIN = [9,10,11]  # The echo pins of the ultra sonic sensors
 LED_PIN = [7,8,25]    # The pins of the leds
 
@@ -42,7 +42,7 @@ def pin_setup():
     
     for pin in LED_PIN:
         GPIO.setup(pin, GPIO.OUT)
-        GPIO.output(pin, False)
+        GPIO.output(pin, True)
 
     GPIO.output(TRIG, False)
     print "Waiting For Sensors To Settle"
@@ -55,9 +55,9 @@ def run_sensor(sensor):
     dist = read_distance(ECHO_PIN[sensor])
     print "Distance ",sensor,":",dist,"cm"
     if dist < DIST_TRIGGER:
-        GPIO.output(LED_PIN[sensor], True)
-    else:
         GPIO.output(LED_PIN[sensor], False)
+    else:
+        GPIO.output(LED_PIN[sensor], True)
     time.sleep(0.05)
 
 # Cleaning up and exiting the program
